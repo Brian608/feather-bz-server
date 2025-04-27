@@ -6,13 +6,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.feather.bz.domain.base.BaseRequest;
+import org.feather.bz.domain.entity.enums.SexEnum;
+import org.feather.bz.validator.InEnum;
+import org.feather.bz.validator.IsMobile;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @projectName: feather-bz-server
@@ -30,10 +30,11 @@ import java.util.Date;
 @Data
 public class AddUserRequest  extends BaseRequest {
 
-    @Length(max = 50,message = "姓名最长50")
-    @Pattern(regexp = "^[a-zA-Z0-9]+$",message = "用户名只能包含数字和字母，并且不能超过50个字符")
+    @Length(max = 11,message = "姓名最长11位置")
+  //  @Pattern(regexp = "^[a-zA-Z0-9]+$",message = "用户名只能包含数字和字母，并且不能超过50个字符")
+    @IsMobile
     @NotNull(message = "用户名不能为空")
-    @Schema(description = "用户名",name ="username",example = "admin")
+    @Schema(description = "用户名",name ="username",example = "17780778066")
     private String username;
 
 
@@ -53,15 +54,6 @@ public class AddUserRequest  extends BaseRequest {
 
 
     /**
-     * 手机号 手机号
-     */
-    @NotNull(message = "手机号不能为空")
-    @Length(max = 11)
-    @Pattern(regexp = "1[3|4|5|7|8][0-9]{9}$",message = "手机号格式错误")
-    @Schema(description = "手机号",name ="mobile",example = "18888888888")
-    private String mobile;
-
-    /**
      * 邮箱地址 邮箱地址
      */
     @NotNull(message = "邮箱不能为空")
@@ -73,6 +65,7 @@ public class AddUserRequest  extends BaseRequest {
     /**
      * 性别 性别 1:男  0:女  2:保密
      */
+    @InEnum(value = SexEnum.class,message = "性别值只能在{value}范围内")
     @Schema(description = "性别",name ="sex",example = "2")
     @NotNull(message = "性别不能为空")
     private Integer sex;

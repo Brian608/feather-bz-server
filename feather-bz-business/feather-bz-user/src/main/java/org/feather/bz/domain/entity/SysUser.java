@@ -4,8 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.feather.bz.domain.base.BaseEntity;
 
-import java.time.LocalDateTime;
-
 /**
  * @projectName: feather-bz-server
  * @package: org.feather.bz.domain.entity
@@ -37,12 +35,6 @@ public class SysUser extends BaseEntity {
      */
     private String realName;
 
-
-
-    /**
-     * 手机号 手机号
-     */
-    private String mobile;
 
     /**
      * 邮箱地址 邮箱地址

@@ -7,11 +7,9 @@ import org.feather.bz.domain.base.JsonResult;
 import org.feather.bz.domain.entity.SysUser;
 import org.feather.bz.domain.entity.request.AddUserRequest;
 import org.feather.bz.service.ISysUserService;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
