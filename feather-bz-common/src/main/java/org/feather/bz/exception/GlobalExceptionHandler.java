@@ -1,5 +1,7 @@
 package org.feather.bz.exception;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.feather.bz.domain.base.JsonResult;
 import org.feather.bz.domain.enums.BizCodeEnum;
@@ -14,8 +16,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;

@@ -61,24 +61,24 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
     @Override
     public Boolean register(AddUserRequest request) {
-        String username = request.getUsername();
-        Assert.isFalse(userNameExist(username),()->new BizException(BizCodeEnum.USER_NAME_EXIST));
-        SysUser sysUser=new SysUser();
-        String salt = RandomUtil.randomString(8);
-        sysUser.setSalt(salt);
-        BeanUtils.copyProperties(request,sysUser);
-        try {
-            sysUser.setPassword(MD5Utils.getMD5Str(request.getPassword().concat(salt)));
-        } catch (Exception e) {
-            throw new BizException("用户加密异常");
-        }
-        // 保存用户后，将用户名加入布隆过滤器
-        boolean saveSuccess = this.save(sysUser);
-        if (saveSuccess && userNameBloomFilter != null) {
-            userNameBloomFilter.add(username);
-            log.info("注册成功,【{}】写入布隆过滤",username);
-        }
-        return saveSuccess;
+//        String username = request.getUsername();
+//        Assert.isFalse(userNameExist(username),()->new BizException(BizCodeEnum.USER_NAME_EXIST));
+//        SysUser sysUser=new SysUser();
+//        String salt = RandomUtil.randomString(8);
+//        sysUser.setSalt(salt);
+//        BeanUtils.copyProperties(request,sysUser);
+//        try {
+//            sysUser.setPassword(MD5Utils.getMD5Str(request.getPassword().concat(salt)));
+//        } catch (Exception e) {
+//            throw new BizException("用户加密异常");
+//        }
+//        // 保存用户后，将用户名加入布隆过滤器
+//        boolean saveSuccess = this.save(sysUser);
+//        if (saveSuccess && userNameBloomFilter != null) {
+//            userNameBloomFilter.add(username);
+//            log.info("注册成功,【{}】写入布隆过滤",username);
+//        }
+        return true;
     }
 
     public boolean userNameExist(String username) {

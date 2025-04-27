@@ -1,10 +1,10 @@
 package org.feather.bz.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import jakarta.validation.constraints.NotEmpty;
 import org.apache.ibatis.annotations.Mapper;
 import org.feather.bz.domain.entity.SysUser;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -19,7 +19,7 @@ import java.util.List;
 @Mapper
 public interface SysUserMapper extends BaseMapper<SysUser> {
 
-    int  userNameExist(@NotEmpty  String username);
+    int  userNameExist(@NotEmpty String username);
 
     List<String> getAllUsernames();
 }

@@ -1,7 +1,9 @@
 package org.feather.bz.validator;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
+
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
 import java.lang.annotation.*;
 
 /**
@@ -13,22 +15,14 @@ import java.lang.annotation.*;
  * @since: 2025-04-27 17:05
  * @version: 1.0
  */
-@Target({
-        ElementType.METHOD,
-        ElementType.FIELD,
-        ElementType.ANNOTATION_TYPE,
-        ElementType.CONSTRUCTOR,
-        ElementType.PARAMETER,
-        ElementType.TYPE_USE
-})
-@Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(
-        validatedBy = {InEnumValidator.class}
-)
+@Constraint(validatedBy = InEnumValidator.class)
+@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
 public @interface InEnum {
+
     /**
-     * @return 实现 EnumValuable 接口的
+     * 指定的枚举类，要求实现 ArrayValuable 接口
      */
     Class<? extends ArrayValuable<?>> value();
 
@@ -37,5 +31,4 @@ public @interface InEnum {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-
 }

@@ -1,9 +1,8 @@
 package org.feather.bz.validator;
 
-import cn.hutool.core.collection.CollUtil;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,10 +38,10 @@ public class InEnumValidator implements ConstraintValidator<InEnum, Object> {
         if (value == null) {
             return true;
         }
-        //value 是集合
+        // value 是集合
         if (value instanceof Collection) {
             // 校验通过
-            if (CollUtil.containsAll(values, (Collection<?>) value)) {
+            if (containsAll(values, (Collection<?>) value)) {
                 return true;
             }
         } else {
@@ -51,11 +50,14 @@ public class InEnumValidator implements ConstraintValidator<InEnum, Object> {
                 return true;
             }
         }
-        // 校验不通过，自定义提示语句（因为，注解上的 value 是枚举类，无法获得枚举类的实际值）
+        // 校验不通过，自定义提示语句
         context.disableDefaultConstraintViolation(); // 禁用默认的 message 的值
         context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate()
                 .replaceAll("\\{value}", values.toString())).addConstraintViolation(); // 重新添加错误提示语句
         return false;
     }
 
+    private boolean containsAll(Collection<?> source, Collection<?> target) {
+        return source.containsAll(target);
+    }
 }
