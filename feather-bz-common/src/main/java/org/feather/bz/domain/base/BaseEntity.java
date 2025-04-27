@@ -21,9 +21,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class BaseEntity  implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class BaseEntity  extends  BaseRequest{
 
     /**
      * 主键id 用户id

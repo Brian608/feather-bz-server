@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.feather.bz.mapper.SysUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="org.feather.bz.domain.entity.SysUser">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="password" property="password" />
+        <result column="salt" property="salt"/>
+        <result column="real_name" property="realName" />
+        <result column="mobile" property="mobile" />
+        <result column="email" property="email" />
+        <result column="avatar" property="avatar"/>
+        <result column="sex" property="sex" />
+        <result column="created_time" property="createdTime" />
+        <result column="updated_time" property="updatedTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, username, password, real_name, face, mobile, email, sex, created_time, updated_time
+    </sql>
+    <select id="userNameExist" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM sys_user WHERE username =  #{username};
+    </select>
+    <select id="getAllUsernames" resultType="java.lang.String">
+        select username FROM sys_user;
+    </select>
+
+
+</mapper>

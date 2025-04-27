@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.feather.bz.domain.entity.SysUser;
 
+import javax.validation.constraints.NotEmpty;
+import java.util.List;
+
 /**
  * @projectName: feather-bz-server
  * @package: org.feather.bz.mapper
@@ -15,4 +18,8 @@ import org.feather.bz.domain.entity.SysUser;
  */
 @Mapper
 public interface SysUserMapper extends BaseMapper<SysUser> {
+
+    int  userNameExist(@NotEmpty  String username);
+
+    List<String> getAllUsernames();
 }

@@ -2,6 +2,7 @@ package org.feather.bz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.feather.bz.domain.entity.SysUser;
+import org.feather.bz.domain.entity.request.AddUserRequest;
 
 /**
  * @projectName: feather-bz-server
@@ -14,4 +15,13 @@ import org.feather.bz.domain.entity.SysUser;
  */
 
 public interface ISysUserService extends IService<SysUser> {
+
+    /**
+     * description: 注册用户
+     * @param request
+     * @return {@link Boolean}
+     * @author: feather
+     * @since: 2025-04-27 14:56
+     **/
+    Boolean register(AddUserRequest request);
 }

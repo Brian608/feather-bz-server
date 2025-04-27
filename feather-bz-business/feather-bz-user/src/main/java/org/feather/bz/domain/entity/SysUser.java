@@ -56,10 +56,6 @@ public class SysUser extends BaseEntity {
      */
     private Integer sex;
 
-    /**
-     * 生日 生日
-     */
-    private LocalDateTime birthday;
 
 
 

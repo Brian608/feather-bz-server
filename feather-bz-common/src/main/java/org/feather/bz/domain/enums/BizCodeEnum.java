@@ -60,6 +60,14 @@ public enum BizCodeEnum {
      * 2、{"test":}  test属性没有给值
      */
     CLIENT_REQUEST_BODY_FORMAT_ERROR(110008, "客户端请求体JSON格式错误或字段类型不匹配"),
+
+
+
+
+
+
+
+    USER_NAME_EXIST(200001, "用户名已经存在"),
     ;
 
 

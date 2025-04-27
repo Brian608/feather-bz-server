@@ -5,12 +5,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.feather.bz.domain.base.JsonResult;
 import org.feather.bz.domain.entity.SysUser;
+import org.feather.bz.domain.entity.request.AddUserRequest;
 import org.feather.bz.service.ISysUserService;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -29,6 +30,12 @@ import java.util.List;
 public class UserController {
 
     private  final ISysUserService sysUserService;
+
+    @Operation(summary = "注册用户",   description = "注册用户")
+    @PostMapping("/register")
+    public JsonResult<Boolean> register(@RequestBody @Validated AddUserRequest request)  {
+        return JsonResult.buildSuccess(sysUserService.register(request));
+    }
 
     @Operation(summary = "查询用户列表", description = "获取系统中所有用户的信息",method = "GET")
     @GetMapping("/list")
