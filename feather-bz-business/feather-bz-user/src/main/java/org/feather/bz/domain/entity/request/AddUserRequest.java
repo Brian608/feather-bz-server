@@ -15,7 +15,6 @@ import org.feather.bz.validator.InEnum;
 import org.feather.bz.validator.IsMobile;
 
 
-
 /**
  * @projectName: feather-bz-server
  * @package: org.feather.bz.domain.entity.request

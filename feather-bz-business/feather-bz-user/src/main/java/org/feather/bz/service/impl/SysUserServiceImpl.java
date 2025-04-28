@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.feather.bz.SlidingWindowRateLimiter;
+import org.feather.bz.domain.constant.CommonConstant;
 import org.feather.bz.domain.entity.SysUser;
 import org.feather.bz.domain.entity.constant.UserConstant;
 import org.feather.bz.domain.entity.request.AddUserRequest;
@@ -17,9 +19,13 @@ import org.feather.bz.utils.MD5Utils;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static org.feather.bz.domain.enums.BizCodeEnum.SEND_NOTICE_DUPLICATED;
 
 /**
  * @projectName: feather-bz-server
@@ -39,6 +45,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private RBloomFilter<String> userNameBloomFilter;
 
     private  final SysUserMapper userMapper;
+
+    private final SlidingWindowRateLimiter slidingWindowRateLimiter;
+    private final StringRedisTemplate redisTemplate;
+
+
 
     /**
      * 服务启动时初始化布隆过滤器
@@ -61,24 +72,37 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
     @Override
     public Boolean register(AddUserRequest request) {
-//        String username = request.getUsername();
-//        Assert.isFalse(userNameExist(username),()->new BizException(BizCodeEnum.USER_NAME_EXIST));
-//        SysUser sysUser=new SysUser();
-//        String salt = RandomUtil.randomString(8);
-//        sysUser.setSalt(salt);
-//        BeanUtils.copyProperties(request,sysUser);
-//        try {
-//            sysUser.setPassword(MD5Utils.getMD5Str(request.getPassword().concat(salt)));
-//        } catch (Exception e) {
-//            throw new BizException("用户加密异常");
-//        }
-//        // 保存用户后，将用户名加入布隆过滤器
-//        boolean saveSuccess = this.save(sysUser);
-//        if (saveSuccess && userNameBloomFilter != null) {
-//            userNameBloomFilter.add(username);
-//            log.info("注册成功,【{}】写入布隆过滤",username);
-//        }
+        String username = request.getUsername();
+        Assert.isFalse(userNameExist(username),()->new BizException(BizCodeEnum.USER_NAME_EXIST));
+        SysUser sysUser=new SysUser();
+        String salt = RandomUtil.randomString(8);
+        sysUser.setSalt(salt);
+        BeanUtils.copyProperties(request,sysUser);
+        try {
+            sysUser.setPassword(MD5Utils.getMD5Str(request.getPassword().concat(salt)));
+        } catch (Exception e) {
+            throw new BizException("用户加密异常");
+        }
+        // 保存用户后，将用户名加入布隆过滤器
+        boolean saveSuccess = this.save(sysUser);
+        if (saveSuccess && userNameBloomFilter != null) {
+            userNameBloomFilter.add(username);
+            log.info("注册成功,【{}】写入布隆过滤",username);
+        }
         return true;
+    }
+
+    @Override
+    public Boolean sendSmsCaptcha(String phone) {
+        Boolean access = slidingWindowRateLimiter.tryAcquire(phone, 1, 60);
+        Assert.isTrue(access,()->new BizException(SEND_NOTICE_DUPLICATED));
+
+        // 生成验证码
+        String captcha = RandomUtil.randomNumbers(6);
+
+        // 验证码存入Redis
+        redisTemplate.opsForValue().set(CommonConstant.CAPTCHA_KEY_PREFIX + phone, captcha, 5, TimeUnit.MINUTES);
+        return  true;
     }
 
     public boolean userNameExist(String username) {
@@ -100,4 +124,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         log.info("布隆过滤器启用，用户名【{}】可能存在，查询数据库二次确认", username);
         return userMapper.userNameExist(username) > 0;
     }
+
+
+
 }

@@ -24,4 +24,14 @@ public interface ISysUserService extends IService<SysUser> {
      * @since: 2025-04-27 14:56
      **/
     Boolean register(AddUserRequest request);
+
+
+    /**
+     * description: 发送验证码
+     * @param phone
+     * @return {@link Boolean}
+     * @author: feather
+     * @since: 2025-04-28 9:19
+     **/
+    Boolean sendSmsCaptcha(String phone);
 }

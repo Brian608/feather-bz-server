@@ -1,4 +1,4 @@
-package org.feather.bz.config;
+package org.feather.bz;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

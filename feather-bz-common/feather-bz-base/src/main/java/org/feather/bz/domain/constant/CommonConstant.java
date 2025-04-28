@@ -23,4 +23,7 @@ public interface CommonConstant {
          * 默认错误码
          */
         int DEFAULT_ERROR_CODE = -1;
+
+        String CAPTCHA_KEY_PREFIX="feather:captcha";
+
 }

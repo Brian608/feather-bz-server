@@ -108,7 +108,7 @@ public class GlobalExceptionHandler {
         Iterator<ConstraintViolation<?>> it = e.getConstraintViolations().iterator();
         String errorMsg = null;
         if (it.hasNext()) {
-            errorMsg = it.next().getMessageTemplate();
+            errorMsg = it.next().getMessage();
         }
         if (errorMsg != null && !errorMsg.isEmpty()) {
             return JsonResult.buildError(BizCodeEnum.CLIENT_REQUEST_PARAM_CHECK_ERROR.getCode(), errorMsg);

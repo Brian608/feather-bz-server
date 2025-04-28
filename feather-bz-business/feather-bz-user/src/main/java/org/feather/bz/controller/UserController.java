@@ -7,6 +7,7 @@ import org.feather.bz.domain.base.JsonResult;
 import org.feather.bz.domain.entity.SysUser;
 import org.feather.bz.domain.entity.request.AddUserRequest;
 import org.feather.bz.service.ISysUserService;
+import org.feather.bz.validator.IsMobile;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ import java.util.List;
  * @since: 2025-04-23 17:55
  * @version: 1.0
  */
+@Validated
 @Tag(name = "用户管理", description = "提供用户相关接口")
 @RequiredArgsConstructor
 @RestController
@@ -33,6 +35,11 @@ public class UserController {
     @PostMapping("/register")
     public JsonResult<Boolean> register(@RequestBody @Validated AddUserRequest request)  {
         return JsonResult.buildSuccess(sysUserService.register(request));
+    }
+    @Operation(summary = "发送验证码",   description = "发送验证码")
+    @GetMapping("/sendCaptcha")
+    public JsonResult<Boolean> sendCaptcha( @IsMobile String phone) {
+        return JsonResult.buildSuccess(sysUserService.sendSmsCaptcha(phone));
     }
 
     @Operation(summary = "查询用户列表", description = "获取系统中所有用户的信息",method = "GET")
