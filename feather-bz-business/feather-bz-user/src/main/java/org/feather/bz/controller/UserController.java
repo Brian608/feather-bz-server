@@ -5,7 +5,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.feather.bz.domain.base.JsonResult;
 import org.feather.bz.domain.entity.SysUser;
-import org.feather.bz.domain.entity.request.AddUserRequest;
+import org.feather.bz.domain.request.AddUserRequest;
+import org.feather.bz.domain.vo.UserVo;
 import org.feather.bz.service.ISysUserService;
 import org.feather.bz.validator.IsMobile;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +41,12 @@ public class UserController {
     @GetMapping("/sendCaptcha")
     public JsonResult<Boolean> sendCaptcha( @IsMobile String phone) {
         return JsonResult.buildSuccess(sysUserService.sendSmsCaptcha(phone));
+    }
+
+    @Operation(summary = "用户信息",   description = "用户信息")
+    @GetMapping("/getUserInfo/{userId}")
+    public JsonResult<UserVo> getUserInfo(@PathVariable Long userId) {
+        return JsonResult.buildSuccess(sysUserService.getUserInfo(userId));
     }
 
     @Operation(summary = "查询用户列表", description = "获取系统中所有用户的信息",method = "GET")

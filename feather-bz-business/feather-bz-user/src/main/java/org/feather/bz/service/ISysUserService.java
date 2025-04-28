@@ -1,8 +1,10 @@
 package org.feather.bz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.catalina.User;
 import org.feather.bz.domain.entity.SysUser;
-import org.feather.bz.domain.entity.request.AddUserRequest;
+import org.feather.bz.domain.request.AddUserRequest;
+import org.feather.bz.domain.vo.UserVo;
 
 /**
  * @projectName: feather-bz-server
@@ -34,4 +36,14 @@ public interface ISysUserService extends IService<SysUser> {
      * @since: 2025-04-28 9:19
      **/
     Boolean sendSmsCaptcha(String phone);
+
+
+    /**
+     * description: 用户信息
+     * @param userId
+     * @return {@link UserVo}
+     * @author: feather
+     * @since: 2025-04-28 14:30
+     **/
+    UserVo getUserInfo(Long userId);
 }

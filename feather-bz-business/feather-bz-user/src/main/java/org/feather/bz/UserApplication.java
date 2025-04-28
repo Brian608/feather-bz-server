@@ -1,5 +1,7 @@
 package org.feather.bz;
 
+import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
+import com.alicp.jetcache.anno.config.EnableMethodCache;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -10,6 +12,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 
 @SpringBootApplication(scanBasePackages = "org.feather.bz")
 @MapperScan("org.feather.bz.mapper")
+@EnableMethodCache(basePackages = "org.feather.bz")
+@EnableCreateCacheAnnotation
 public class UserApplication implements ApplicationListener<ApplicationStartedEvent> {
 
     @Autowired

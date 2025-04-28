@@ -2,6 +2,9 @@ package org.feather.bz.service.impl;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.RandomUtil;
+import com.alicp.jetcache.anno.CacheRefresh;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -9,9 +12,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.feather.bz.SlidingWindowRateLimiter;
 import org.feather.bz.domain.constant.CommonConstant;
 import org.feather.bz.domain.entity.SysUser;
-import org.feather.bz.domain.entity.constant.UserConstant;
-import org.feather.bz.domain.entity.request.AddUserRequest;
+import org.feather.bz.domain.constant.UserConstant;
+import org.feather.bz.domain.enums.BaseEnum;
+import org.feather.bz.domain.enums.SexEnum;
+import org.feather.bz.domain.request.AddUserRequest;
 import org.feather.bz.domain.enums.BizCodeEnum;
+import org.feather.bz.domain.vo.UserVo;
 import org.feather.bz.exception.BizException;
 import org.feather.bz.mapper.SysUserMapper;
 import org.feather.bz.service.ISysUserService;
@@ -104,6 +110,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         redisTemplate.opsForValue().set(CommonConstant.CAPTCHA_KEY_PREFIX + phone, captcha, 5, TimeUnit.MINUTES);
         return  true;
     }
+
+    @Cached(name = ":user:cache:id:", cacheType = CacheType.BOTH, key = "#userId", cacheNullValue = true)
+    @CacheRefresh(refresh = 60, timeUnit = TimeUnit.MINUTES)
+    @Override
+    public UserVo getUserInfo(Long userId) {
+        SysUser sysUser =  this.getById(userId);
+        Assert.notNull(sysUser,()->new BizException(BizCodeEnum.ACCOUNT_UNREGISTER));
+        UserVo userVo=new UserVo();
+        BeanUtils.copyProperties(sysUser,userVo);
+        userVo.setSexText(BaseEnum.getByCode(userVo.getSex(),SexEnum.class).getMsg());
+        return userVo;
+    }
+
 
     public boolean userNameExist(String username) {
         // 1. 如果布隆过滤器不可用，直接查数据库

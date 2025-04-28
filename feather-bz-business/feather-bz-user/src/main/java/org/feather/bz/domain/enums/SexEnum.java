@@ -1,8 +1,7 @@
-package org.feather.bz.domain.entity.enums;
+package org.feather.bz.domain.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.feather.bz.domain.enums.BaseEnum;
 import org.feather.bz.validator.ArrayValuable;
 
 import java.util.Arrays;

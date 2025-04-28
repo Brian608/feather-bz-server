@@ -1,4 +1,4 @@
-package org.feather.bz.domain.entity.request;
+package org.feather.bz.domain.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.feather.bz.domain.base.BaseRequest;
-import org.feather.bz.domain.entity.enums.SexEnum;
+import org.feather.bz.domain.enums.SexEnum;
 import org.feather.bz.validator.InEnum;
 import org.feather.bz.validator.IsMobile;
 

@@ -1,4 +1,4 @@
-package org.feather.bz.domain.entity.constant;
+package org.feather.bz.domain.constant;
 
 /**
  * @projectName: feather-bz-server
