@@ -38,6 +38,6 @@ public class LoginVO extends BaseRequest {
     public LoginVO(UserVo userVo) {
         this.userVo=userVo;
         this.token = StpUtil.getTokenValue();
-        this.tokenExpiration = StpUtil.getTokenSessionTimeout();
+        this.tokenExpiration = StpUtil.getTokenTimeout();
     }
 }
