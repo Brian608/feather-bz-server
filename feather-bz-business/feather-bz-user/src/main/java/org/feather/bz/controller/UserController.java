@@ -1,11 +1,14 @@
 package org.feather.bz.controller;
 
+import cn.dev33.satoken.stp.StpUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.feather.bz.domain.base.JsonResult;
 import org.feather.bz.domain.entity.SysUser;
 import org.feather.bz.domain.request.AddUserRequest;
+import org.feather.bz.domain.request.LoginRequest;
+import org.feather.bz.domain.vo.LoginVO;
 import org.feather.bz.domain.vo.UserVo;
 import org.feather.bz.service.ISysUserService;
 import org.feather.bz.validator.IsMobile;
@@ -41,6 +44,19 @@ public class UserController {
     @GetMapping("/sendCaptcha")
     public JsonResult<Boolean> sendCaptcha( @IsMobile String phone) {
         return JsonResult.buildSuccess(sysUserService.sendSmsCaptcha(phone));
+    }
+
+    @Operation(summary = "登录",   description = "登录")
+    @PostMapping("/login")
+    public JsonResult<LoginVO> login(@RequestBody @Validated LoginRequest request)  {
+        return JsonResult.buildSuccess(sysUserService.login(request));
+    }
+
+    @Operation(summary = "登出",   description = "登出")
+    @PostMapping("/logout")
+    public JsonResult<Boolean> logout()  {
+        StpUtil.logout();
+        return JsonResult.buildSuccess(true);
     }
 
     @Operation(summary = "用户信息",   description = "用户信息")

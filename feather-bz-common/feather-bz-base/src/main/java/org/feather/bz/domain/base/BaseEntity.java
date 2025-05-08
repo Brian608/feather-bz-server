@@ -34,14 +34,14 @@ public class BaseEntity  extends  BaseRequest{
     /**
      * 创建时间 创建时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss",locale = "zh",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createdTime;
 
     /**
      * 更新时间 更新时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss",locale = "zh",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", locale = "zh", timezone = "GMT+8")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updatedTime;
 

@@ -27,6 +27,9 @@
     <select id="getAllUsernames" resultType="java.lang.String">
         select username FROM sys_user;
     </select>
+    <select id="getUserInfo" resultType="org.feather.bz.domain.entity.SysUser">
+        select * from sys_user where  username = #{userName}
+    </select>
 
 
 </mapper>

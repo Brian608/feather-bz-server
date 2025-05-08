@@ -22,4 +22,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
     int  userNameExist(@NotEmpty String username);
 
     List<String> getAllUsernames();
+
+
+   SysUser getUserInfo (String userName);
 }

@@ -70,6 +70,7 @@ public enum BizCodeEnum {
     USER_NAME_EXIST(200001, "用户名已经存在"),
     SEND_NOTICE_DUPLICATED(200002, "不允许重复发送通知"),
     ACCOUNT_UNREGISTER(200003,"账号不存在"),
+    VERIFICATION_CODE_WRONG(200004, "验证码错误"),
     ;
 
 

@@ -1,5 +1,7 @@
 package org.feather.bz.service.impl;
 
+import cn.dev33.satoken.stp.SaLoginModel;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.RandomUtil;
 import com.alicp.jetcache.anno.CacheRefresh;
@@ -9,6 +11,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.feather.bz.SlidingWindowRateLimiter;
 import org.feather.bz.domain.constant.CommonConstant;
 import org.feather.bz.domain.entity.SysUser;
@@ -17,6 +20,8 @@ import org.feather.bz.domain.enums.BaseEnum;
 import org.feather.bz.domain.enums.SexEnum;
 import org.feather.bz.domain.request.AddUserRequest;
 import org.feather.bz.domain.enums.BizCodeEnum;
+import org.feather.bz.domain.request.LoginRequest;
+import org.feather.bz.domain.vo.LoginVO;
 import org.feather.bz.domain.vo.UserVo;
 import org.feather.bz.exception.BizException;
 import org.feather.bz.mapper.SysUserMapper;
@@ -105,6 +110,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         // 生成验证码
         String captcha = RandomUtil.randomNumbers(6);
+        log.info("手机号:[{}]发送验证码：[{}]",phone, captcha);
 
         // 验证码存入Redis
         redisTemplate.opsForValue().set(CommonConstant.CAPTCHA_KEY_PREFIX + phone, captcha, 5, TimeUnit.MINUTES);
@@ -121,6 +127,35 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         BeanUtils.copyProperties(sysUser,userVo);
         userVo.setSexText(BaseEnum.getByCode(userVo.getSex(),SexEnum.class).getMsg());
         return userVo;
+    }
+    @Cached(name = ":user:cache:userName:", cacheType = CacheType.BOTH, key = "#userName", cacheNullValue = true)
+    @CacheRefresh(refresh = 60, timeUnit = TimeUnit.MINUTES)
+    @Override
+    public UserVo getUserInfo(String userName) {
+        SysUser sysUser =  userMapper.getUserInfo(userName);
+        Assert.notNull(sysUser,()->new BizException(BizCodeEnum.ACCOUNT_UNREGISTER));
+        UserVo userVo=new UserVo();
+        BeanUtils.copyProperties(sysUser,userVo);
+        userVo.setSexText(BaseEnum.getByCode(userVo.getSex(),SexEnum.class).getMsg());
+        return userVo;
+    }
+
+    @Override
+    public LoginVO login(LoginRequest request) {
+        String userName = request.getUserName();
+        String smsCaptcha = request.getSmsCaptcha();
+        String cachedCode = redisTemplate.opsForValue().get(CommonConstant.CAPTCHA_KEY_PREFIX + userName);
+          if (StringUtils.isBlank(cachedCode) ||!StringUtils.equalsIgnoreCase(cachedCode,smsCaptcha)){
+              throw new BizException(BizCodeEnum.VERIFICATION_CODE_WRONG);
+          }
+        UserVo userInfo = getUserInfo(userName);
+        //登录
+        StpUtil.login(userInfo.getId(), new SaLoginModel().setIsLastingCookie(request.getRememberMe())
+                .setTimeout(UserConstant.DEFAULT_LOGIN_SESSION_TIMEOUT));
+        StpUtil.getSession().set(userInfo.getId().toString(), userInfo);
+        log.info("用户[{}]登录成功",userName);
+        return new LoginVO(userInfo);
+
     }
 
 
@@ -143,6 +178,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         log.info("布隆过滤器启用，用户名【{}】可能存在，查询数据库二次确认", username);
         return userMapper.userNameExist(username) > 0;
     }
+
+
 
 
 
