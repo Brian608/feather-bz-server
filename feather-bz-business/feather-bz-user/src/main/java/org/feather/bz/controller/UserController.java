@@ -60,9 +60,11 @@ public class UserController {
     }
 
     @Operation(summary = "用户信息",   description = "用户信息")
-    @GetMapping("/getUserInfo/{userId}")
-    public JsonResult<UserVo> getUserInfo(@PathVariable Long userId) {
-        return JsonResult.buildSuccess(sysUserService.getUserInfo(userId));
+    @GetMapping("/getUserInfo")
+    public JsonResult<UserVo> getUserInfo() {
+        String userId = StpUtil.getLoginIdAsString();
+        UserVo userVo = (UserVo) StpUtil.getSession().get(String.valueOf(userId));
+        return JsonResult.buildSuccess(userVo);
     }
 
     @Operation(summary = "查询用户列表", description = "获取系统中所有用户的信息",method = "GET")

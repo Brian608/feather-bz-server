@@ -152,7 +152,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         //登录
         StpUtil.login(userInfo.getId(), new SaLoginModel().setIsLastingCookie(request.getRememberMe())
                 .setTimeout(UserConstant.DEFAULT_LOGIN_SESSION_TIMEOUT));
-        StpUtil.getSession().set(userInfo.getId().toString(), userInfo);
+        StpUtil.getTokenSession().set(String.valueOf(userInfo.getId()), userInfo);
         log.info("用户[{}]登录成功",userName);
         return new LoginVO(userInfo);
 
