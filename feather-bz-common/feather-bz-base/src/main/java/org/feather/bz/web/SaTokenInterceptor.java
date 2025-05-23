@@ -23,8 +23,6 @@ public class SaTokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String path = request.getRequestURI();
-
 
         String authToken = request.getHeader("feather-token-id");
         if (StringUtils.isBlank(authToken)){
