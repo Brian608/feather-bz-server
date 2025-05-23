@@ -71,6 +71,7 @@ public enum BizCodeEnum {
     SEND_NOTICE_DUPLICATED(200002, "不允许重复发送通知"),
     ACCOUNT_UNREGISTER(200003,"账号不存在"),
     VERIFICATION_CODE_WRONG(200004, "验证码错误"),
+    TOKEN_EXPIRE_ERROR(300005,"无效token，请重新登录"),
     ;
 
 
