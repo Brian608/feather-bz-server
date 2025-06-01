@@ -1,5 +1,7 @@
 package org.feather.bz.domain.entity;
 
+import com.github.houbb.sensitive.annotation.strategy.SensitiveStrategyPassword;
+import com.github.houbb.sensitive.annotation.strategy.SensitiveStrategyPhone;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.feather.bz.domain.base.BaseEntity;
@@ -20,11 +22,13 @@ public class SysUser extends BaseEntity {
     /**
      * 用户名 用户名
      */
+    @SensitiveStrategyPhone
     private String username;
 
     /**
      * 密码 密码
      */
+    @SensitiveStrategyPassword
     private String password;
 
     private String salt;
