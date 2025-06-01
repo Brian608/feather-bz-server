@@ -7,6 +7,7 @@ import org.feather.bz.domain.base.JsonResult;
 import org.feather.bz.domain.enums.BizCodeEnum;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 
 import java.util.ArrayList;
@@ -38,6 +40,13 @@ public class GlobalExceptionHandler {
     public JsonResult<Object> handle(Exception e){
         log.error("[系统异常: {}]",e.getMessage());
         return JsonResult.buildError("全局异常，未知错误");
+    }
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<Void> handleNoResourceFound(NoResourceFoundException e) {
+        if (e.getResourcePath().equals("/favicon.ico")) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build(); // 其他静态资源返回 404
     }
 
 

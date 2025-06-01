@@ -63,7 +63,7 @@ public class UserController {
     @GetMapping("/getUserInfo")
     public JsonResult<UserVo> getUserInfo() {
         String userId = StpUtil.getLoginIdAsString();
-        UserVo userVo = (UserVo) StpUtil.getSession().get(String.valueOf(userId));
+        UserVo userVo = (UserVo) StpUtil.getTokenSession().get(String.valueOf(userId));
         return JsonResult.buildSuccess(userVo);
     }
 
