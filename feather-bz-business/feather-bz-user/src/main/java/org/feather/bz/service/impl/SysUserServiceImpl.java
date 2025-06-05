@@ -14,12 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.feather.bz.SlidingWindowRateLimiter;
 import org.feather.bz.domain.constant.CommonConstant;
-import org.feather.bz.domain.entity.SysUser;
 import org.feather.bz.domain.constant.UserConstant;
+import org.feather.bz.domain.entity.SysUser;
 import org.feather.bz.domain.enums.BaseEnum;
+import org.feather.bz.domain.enums.BizCodeEnum;
 import org.feather.bz.domain.enums.SexEnum;
 import org.feather.bz.domain.request.AddUserRequest;
-import org.feather.bz.domain.enums.BizCodeEnum;
 import org.feather.bz.domain.request.LoginRequest;
 import org.feather.bz.domain.vo.LoginVO;
 import org.feather.bz.domain.vo.UserVo;
@@ -33,7 +33,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.feather.bz.domain.enums.BizCodeEnum.SEND_NOTICE_DUPLICATED;
@@ -58,7 +61,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private  final SysUserMapper userMapper;
 
     private final SlidingWindowRateLimiter slidingWindowRateLimiter;
-    private final StringRedisTemplate redisTemplate;
+    private final StringRedisTemplate stringRedisTemplate;
 
 
 
@@ -113,7 +116,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         log.info("手机号:[{}]发送验证码：[{}]",phone, captcha);
 
         // 验证码存入Redis
-        redisTemplate.opsForValue().set(CommonConstant.CAPTCHA_KEY_PREFIX + phone, captcha, 5, TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set(CommonConstant.CAPTCHA_KEY_PREFIX + phone, captcha, 5, TimeUnit.MINUTES);
         return  true;
     }
 
@@ -144,7 +147,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public LoginVO login(LoginRequest request) {
         String userName = request.getUserName();
         String smsCaptcha = request.getSmsCaptcha();
-        String cachedCode = redisTemplate.opsForValue().get(CommonConstant.CAPTCHA_KEY_PREFIX + userName);
+        String cachedCode = stringRedisTemplate.opsForValue().get(CommonConstant.CAPTCHA_KEY_PREFIX + userName);
           if (StringUtils.isBlank(cachedCode) ||!StringUtils.equalsIgnoreCase(cachedCode,smsCaptcha)){
               throw new BizException(BizCodeEnum.VERIFICATION_CODE_WRONG);
           }
@@ -179,8 +182,31 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return userMapper.userNameExist(username) > 0;
     }
 
+    @Override
+    public Boolean likePost(Long postId) {
+        String key = CommonConstant.CAPTCHA_LIKE_PREFIX + postId;
+        // 使用 StringRedisTemplate 的原生方法
+        return stringRedisTemplate.opsForZSet().add(
+                key,
+                RandomUtil.randomString(11),
+                System.currentTimeMillis()
+        );
+    }
 
+    @Override
+    public Boolean unLikePost(Long postId) {
+        String key = CommonConstant.CAPTCHA_LIKE_PREFIX + postId;
+        Long result = stringRedisTemplate.opsForZSet().remove(
+                key,
+                RandomUtil.randomString(11)
+        );
+        return result != null && result > 0;
+    }
 
-
-
+    @Override
+    public List<String> getLikes(Long postId) {
+        String key = CommonConstant.CAPTCHA_LIKE_PREFIX + postId;
+        Set<String> userIds = stringRedisTemplate.opsForZSet().reverseRange(key, 0, -1);
+        return userIds == null ? Collections.emptyList() : new ArrayList<>(userIds);
+    }
 }

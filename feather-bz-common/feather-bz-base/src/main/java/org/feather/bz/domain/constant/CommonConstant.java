@@ -26,4 +26,9 @@ public interface CommonConstant {
 
         String CAPTCHA_KEY_PREFIX="feather:captcha";
 
+        /**
+         * 帖子点赞缓存key前缀
+         */
+        String CAPTCHA_LIKE_PREFIX="post:like";
+
 }

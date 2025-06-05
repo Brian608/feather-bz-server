@@ -73,4 +73,23 @@ public class UserController {
         return  JsonResult.buildSuccess(sysUserService.list());
     }
 
+    @Operation(summary = "点赞", description = "点赞",method = "GET")
+    @GetMapping("/likePost/{postId}")
+    public JsonResult<Boolean> likePost(@PathVariable Long postId)  {
+        return  JsonResult.buildSuccess(sysUserService.likePost(postId));
+    }
+
+    @Operation(summary = "取消点赞", description = "取消点赞",method = "GET")
+    @GetMapping("/unLikePost/{postId}")
+    public JsonResult<Boolean> unLikePost(@PathVariable Long postId)  {
+        return  JsonResult.buildSuccess(sysUserService.unLikePost(postId));
+    }
+
+    @Operation(summary = "点赞列表", description = "点赞列表",method = "GET")
+    @GetMapping("/getLikes/{postId}")
+    public JsonResult<List<String>> getLikes(@PathVariable Long postId)  {
+        return  JsonResult.buildSuccess(sysUserService.getLikes(postId));
+    }
+
+
 }

@@ -1,12 +1,13 @@
 package org.feather.bz.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import org.apache.catalina.User;
 import org.feather.bz.domain.entity.SysUser;
 import org.feather.bz.domain.request.AddUserRequest;
 import org.feather.bz.domain.request.LoginRequest;
 import org.feather.bz.domain.vo.LoginVO;
 import org.feather.bz.domain.vo.UserVo;
+
+import java.util.List;
 
 /**
  * @projectName: feather-bz-server
@@ -66,4 +67,32 @@ public interface ISysUserService extends IService<SysUser> {
      * @since: 2025-05-07 17:24
      **/
     LoginVO login(LoginRequest request);
+
+    /**
+     * description: 点赞
+     * @param postId
+     * @return
+     * @author: feather
+     * @since: 2025-06-04 16:34
+     **/
+    Boolean likePost(Long postId);
+
+    /**
+     * description: 取消点赞
+     * @param postId
+     * @return
+     * @author: feather
+     * @since: 2025-06-04 16:34
+     **/
+    Boolean unLikePost(Long postId);
+
+    /**
+     * description: 点赞列表
+     * @param postId
+     * @return {@link List< Long>}
+     * @author: feather
+     * @since: 2025-06-04 17:04
+     **/
+
+    List<String>  getLikes(Long postId);
 }
