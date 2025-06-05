@@ -188,7 +188,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // 使用 StringRedisTemplate 的原生方法
         return stringRedisTemplate.opsForZSet().add(
                 key,
-                RandomUtil.randomString(11),
+                StpUtil.getLoginIdAsString(),
                 System.currentTimeMillis()
         );
     }
@@ -198,7 +198,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         String key = CommonConstant.CAPTCHA_LIKE_PREFIX + postId;
         Long result = stringRedisTemplate.opsForZSet().remove(
                 key,
-                RandomUtil.randomString(11)
+                StpUtil.getLoginIdAsString()
         );
         return result != null && result > 0;
     }
