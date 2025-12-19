@@ -31,7 +31,7 @@ public interface BaseEnum {
     static <E extends Enum<E> & BaseEnum> E getByCode(Integer code, Class<E> clazz) {
         Objects.requireNonNull(code);
         EnumSet<E> all = EnumSet.allOf(clazz);
-        return all.stream().filter((e) -> ((BaseEnum)e).getCode().equals(code)).findFirst().orElse(null);
+        return all.stream().filter((e) -> e.getCode().equals(code)).findFirst().orElse(null);
     }
 
     /**
@@ -44,7 +44,7 @@ public interface BaseEnum {
     static <E extends Enum<E> & BaseEnum> E getByMsg(String msg, Class<E> clazz) {
         Objects.requireNonNull(msg);
         EnumSet<E> all = EnumSet.allOf(clazz);
-        return all.stream().filter((e) -> ((BaseEnum)e).getMsg().equals(msg)).findFirst().orElse(null);
+        return all.stream().filter((e) -> e.getMsg().equals(msg)).findFirst().orElse(null);
     }
 
     /**
